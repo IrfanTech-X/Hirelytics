@@ -1,5 +1,5 @@
 # Core dependencies
-Flask==2.3.4
+Flask==2.3.3
 
 # Numerical & data processing
 numpy==1.25.2

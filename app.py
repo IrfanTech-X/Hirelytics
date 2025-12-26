@@ -7,6 +7,11 @@ import pandas as pd
 import numpy as np
 import uuid
 
+import nltk
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+
 app = Flask(__name__)
 
 # -------------------- Paths --------------------

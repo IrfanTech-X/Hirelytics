@@ -1,0 +1,5 @@
+Maria Garcia
+Email: maria.garcia@example.com
+Skills: Python, Machine Learning, SQL, Data Analysis, Git
+Experience: Internship in DevOps at Cloud Services
+Education: BSc in Software Engineering

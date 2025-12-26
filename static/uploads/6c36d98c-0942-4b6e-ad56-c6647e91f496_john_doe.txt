@@ -1,0 +1,4 @@
+Name: John Doe
+Skills: Python, Machine Learning, SQL, Git
+Experience: Software Developer with 2 years experience
+Education: BSc in Computer Science

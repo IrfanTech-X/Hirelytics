@@ -1,0 +1,5 @@
+Susan Harris
+Email: susan.harris@example.com
+Skills: Python, Django, PostgreSQL, Data Science, Git
+Experience: 3 years as Backend Engineer at E-commerce Co
+Education: MSc in Machine Learning

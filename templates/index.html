@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Resume Screening</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f4f7f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin-top: 80px;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.12);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, #007bff, #00c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .file-drop-zone {
+            border: 2px dashed #007bff;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            color: #007bff;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .file-drop-zone:hover {
+            background-color: rgba(0,123,255,0.05);
+            transform: scale(1.02);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-card {
+            background: #e9ecef;
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .progress {
+            height: 20px;
+            border-radius: 10px;
+            margin-top: 5px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        @media (max-width: 600px) {
+            .file-drop-zone { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>AI Resume Screening System</h2>
+    <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+        <!-- Job Description -->
+        <label class="form-label"><strong>Job Description (txt):</strong></label>
+        <div class="file-drop-zone" id="job-drop">
+            Click or drag & drop job description here
+            <input type="file" id="job_description" name="job_description" accept=".txt" required>
+        </div>
+        <div id="job-list"></div>
+
+        <!-- Resumes -->
+        <label class="form-label mt-4"><strong>Upload Resumes (PDF/DOCX):</strong></label>
+        <div class="file-drop-zone" id="resumes-drop">
+            Click or drag & drop resumes here
+            <input type="file" id="resumes" name="resumes" accept=".pdf,.docx" multiple required>
+        </div>
+        <div id="resumes-list"></div>
+
+        <button class="btn btn-custom w-100 mt-4" type="submit">Analyze Resumes</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Job Description Drop Zone
+    const jobInput = document.getElementById('job_description');
+    const jobDrop = document.getElementById('job-drop');
+    const jobList = document.getElementById('job-list');
+
+    jobDrop.addEventListener('click', () => jobInput.click());
+    jobDrop.addEventListener('dragover', e => e.preventDefault());
+    jobDrop.addEventListener('drop', e => {
+        e.preventDefault();
+        jobInput.files = e.dataTransfer.files;
+        displayFiles(jobInput.files, jobList, false);
+    });
+    jobInput.addEventListener('change', () => displayFiles(jobInput.files, jobList, false));
+
+    // Resumes Drop Zone
+    const resumesInput = document.getElementById('resumes');
+    const resumesDrop = document.getElementById('resumes-drop');
+    const resumesList = document.getElementById('resumes-list');
+
+    resumesDrop.addEventListener('click', () => resumesInput.click());
+    resumesDrop.addEventListener('dragover', e => e.preventDefault());
+    resumesDrop.addEventListener('drop', e => {
+        e.preventDefault();
+        resumesInput.files = e.dataTransfer.files;
+        displayFiles(resumesInput.files, resumesList, true);
+    });
+    resumesInput.addEventListener('change', () => displayFiles(resumesInput.files, resumesList, true));
+
+    // Display files with progress bars
+    function displayFiles(files, container, showProgress) {
+        container.innerHTML = '';
+        for (let i = 0; i < files.length; i++) {
+            const div = document.createElement('div');
+            div.className = 'file-card';
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = files[i].name;
+            div.appendChild(nameSpan);
+
+            if(showProgress){
+                const progress = document.createElement('div');
+                progress.className = 'progress w-50';
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated';
+                progressBar.setAttribute('role','progressbar');
+                progressBar.style.width = '0%';
+                progress.appendChild(progressBar);
+                div.appendChild(progress);
+            }
+
+            container.appendChild(div);
+        }
+    }
+
+    // Optional: Animate fake progress before submit
+    document.getElementById('upload-form').addEventListener('submit', e => {
+        const progressBars = document.querySelectorAll('.progress-bar');
+        progressBars.forEach(bar => {
+            let width = 0;
+            const interval = setInterval(() => {
+                if(width >= 100) clearInterval(interval);
+                else {
+                    width += 5;
+                    bar.style.width = width + '%';
+                }
+            }, 50);
+        });
+    });
+</script>
+</body>
+</html>

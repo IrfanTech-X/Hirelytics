@@ -1,0 +1,3 @@
+We are looking for a Software Engineer with strong experience in Python,
+Machine Learning, Data Analysis, SQL, and Git.
+Good problem-solving and communication skills are required.

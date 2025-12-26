@@ -1,0 +1,4 @@
+Name: Jane Smith
+Skills: Java, Python, Data Analysis
+Experience: Data Analyst
+Education: BSc in Software Engineering

@@ -1,0 +1,4 @@
+Name: Alex Johnson
+Skills: HTML, CSS, JavaScript
+Experience: Frontend Developer
+Education: BSc in IT

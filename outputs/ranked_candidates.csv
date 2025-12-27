@@ -1,7 +1,5 @@
 name,similarity,skills,suitability
-CV.pdf,40.04,"Java, MySQL, C, HTML, Git, JavaScript",Low Fit
-mycv.pdf,35.92,"Java, MySQL, C, HTML, CSS, Python, Linux, Git, JavaScript",Low Fit
-CV_updated_for_IDP (1).pdf,48.12,"Java, MySQL, C, HTML, Python, Git, JavaScript",Low Fit
-Susan Harris.txt,54.8,"Data Science, C, PostgreSQL, Machine Learning, Django, Python, Git",Low Fit
-Sarah Walker.txt,47.09,"Java, MySQL, C, Docker, Artificial Intelligence",Low Fit
-maria gracia.txt,73.49,"C, Machine Learning, Python, Git",Moderately Suitable
+CV_updated_for_IDP (1).pdf,48.12,"HTML, Git, Java, JavaScript, C, Python, MySQL",Low Fit
+Susan Harris.txt,54.8,"Data Science, Git, Machine Learning, C, Python, PostgreSQL, Django",Low Fit
+Sarah Walker.txt,47.09,"Artificial Intelligence, Java, C, MySQL, Docker",Low Fit
+maria gracia.txt,73.49,"Machine Learning, Git, C, Python",Moderately Suitable

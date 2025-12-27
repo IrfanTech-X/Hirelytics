@@ -13,9 +13,9 @@ nltk==3.9.1
 sentence-transformers==2.2.2
 transformers==4.35.0
 
-# Torch (CPU version, compatible with PyPI)
+# Torch
 torch==2.1.0
 
 # File handling
-python-docx==0.8.12
+python-docx==1.0.0
 PyPDF2==3.1.1

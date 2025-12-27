@@ -1,21 +1,8 @@
-# Build tools
-pip>=23.0
-setuptools>=68
-wheel>=0.40
-
-# Flask framework
-Flask==2.3.3
-
-# Data processing & NLP
-numpy==1.25.2
-pandas==2.0.3
-nltk==3.9.1
-sentence-transformers==2.2.2
-transformers==4.35.0
-
-# Torch
-torch==2.1.0
-
-# File handling
-python-docx==1.0.0
-PyPDF2==3.1.1
+Flask>=2.2
+numpy
+pandas
+nltk
+sentence-transformers
+transformers
+torch
+python-docx

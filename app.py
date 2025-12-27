@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from utils.text_processor import clean_text
-from models.embedding_model import get_embedding
+from models.embedding_model import get_embedding  # Uses global cache
 from models.skill_extractor import extract_skills
 import os
 import pandas as pd
@@ -8,13 +8,13 @@ import numpy as np
 import uuid
 import nltk
 
+# Download NLTK data (runs only if missing)
 nltk.download('stopwords')
 nltk.download('wordnet')
 
 app = Flask(__name__)
 
 # -------------------- Paths --------------------
-# Use /tmp folder for Render deployments
 UPLOAD_FOLDER = "/tmp/uploads"
 OUTPUT_FOLDER = "/tmp/outputs"
 
@@ -45,17 +45,18 @@ def upload_files():
     if job_file.filename == "" or len(resumes) == 0:
         return "Please upload job description and at least one resume"
 
-    # Save job description
+    # -------------------- Save job description --------------------
     job_filename = f"{uuid.uuid4()}_{job_file.filename}"
     job_path = os.path.join(app.config["UPLOAD_FOLDER"], job_filename)
     job_file.save(job_path)
 
+    # Process job description
     job_text = clean_text(job_path)
     job_emb = get_embedding(job_text)
 
     results = []
 
-    # Process resumes
+    # -------------------- Process resumes --------------------
     for resume in resumes:
         resume_filename = f"{uuid.uuid4()}_{resume.filename}"
         resume_path = os.path.join(app.config["UPLOAD_FOLDER"], resume_filename)
@@ -81,13 +82,13 @@ def upload_files():
             "suitability": label
         })
 
-        # Optional: Delete processed resume to free /tmp space
+        # Delete resume file after processing to save memory
         os.remove(resume_path)
 
-    # Optional: Delete job description after processing
+    # Delete job description file after processing
     os.remove(job_path)
 
-    # Save results CSV
+    # -------------------- Save results CSV --------------------
     output_path = os.path.join(OUTPUT_FOLDER, "ranked_candidates.csv")
     df = pd.DataFrame(results)
     df.to_csv(output_path, index=False)
@@ -96,4 +97,6 @@ def upload_files():
 
 # -------------------- Run App --------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Use 0.0.0.0 for Render; port is injected by Render
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=True)

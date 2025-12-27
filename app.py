@@ -6,23 +6,22 @@ import os
 import pandas as pd
 import numpy as np
 import uuid
-
 import nltk
+
 nltk.download('stopwords')
 nltk.download('wordnet')
-
 
 app = Flask(__name__)
 
 # -------------------- Paths --------------------
-UPLOAD_FOLDER = os.path.join("static", "uploads")
-OUTPUT_FOLDER = "outputs"
+# Use /tmp folder for Render deployments
+UPLOAD_FOLDER = "/tmp/uploads"
+OUTPUT_FOLDER = "/tmp/outputs"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
 
 # -------------------- Utils --------------------
 def cosine_similarity(vec1, vec2):
@@ -30,12 +29,10 @@ def cosine_similarity(vec1, vec2):
         return 0.0
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
-
 # -------------------- Routes --------------------
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 @app.route("/upload", methods=["POST"])
 def upload_files():
@@ -84,13 +81,18 @@ def upload_files():
             "suitability": label
         })
 
-    # Save results
-    df = pd.DataFrame(results)
+        # Optional: Delete processed resume to free /tmp space
+        os.remove(resume_path)
+
+    # Optional: Delete job description after processing
+    os.remove(job_path)
+
+    # Save results CSV
     output_path = os.path.join(OUTPUT_FOLDER, "ranked_candidates.csv")
+    df = pd.DataFrame(results)
     df.to_csv(output_path, index=False)
 
     return render_template("results.html", results=results)
-
 
 # -------------------- Run App --------------------
 if __name__ == "__main__":

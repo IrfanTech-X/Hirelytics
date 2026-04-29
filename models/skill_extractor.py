@@ -1,52 +1,49 @@
-import json
-import os
 import re
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
 
-# -------------------- Load NLTK --------------------
-nltk.download('stopwords', quiet=True)
-nltk.download('wordnet', quiet=True)
+# Lightweight skill dictionary (ONLY for detection, NOT matching source)
+SKILL_KEYWORDS = [
+    "python", "java", "c", "c++", "machine learning",
+    "deep learning", "nlp", "flask", "django",
+    "mysql", "mongodb", "docker", "git",
+    "javascript", "html", "css", "react", "ai", "ml",
+    "data science", "aws", "azure", "linux"
+]
 
-stop_words = set(stopwords.words('english'))
-lemmatizer = WordNetLemmatizer()
-
-# -------------------- Load Skills --------------------
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SKILLS_PATH = os.path.join(BASE_DIR, "skills.json")
-
-with open(SKILLS_PATH, "r", encoding="utf-8") as f:
-    SKILLS_DB = json.load(f)
-
-# -------------------- Text Preprocessing --------------------
-def preprocess_text(text):
-    text = text.lower()
-
-    # Remove special characters
-    text = re.sub(r'[^a-zA-Z0-9\s]', ' ', text)
-
-    words = text.split()
-
-    # Remove stopwords + lemmatize
-    processed = [
-        lemmatizer.lemmatize(word)
-        for word in words
-        if word not in stop_words
-    ]
-
-    return " ".join(processed)
-
-# -------------------- Skill Extraction --------------------
 def extract_skills(text):
-    clean_text = preprocess_text(text)
+    """
+    Extract skills from ANY text (Job Description OR Resume)
+    """
 
-    found_skills = []
+    if isinstance(text, (list, tuple)):
+        text = " ".join(text)
 
-    for skill, keywords in SKILLS_DB.items():
-        for keyword in keywords:
-            if keyword in clean_text:
-                found_skills.append(skill)
-                break  # avoid duplicate match
+    text = str(text).lower()
 
-    return list(set(found_skills))
+    found_skills = set()
+
+    # 1. keyword-based extraction (MAIN METHOD)
+    for skill in SKILL_KEYWORDS:
+        pattern = r"\b" + re.escape(skill) + r"\b"
+        if re.search(pattern, text):
+            found_skills.add(skill)
+
+    return list(found_skills)
+
+
+def compare_skills(job_skills, resume_skills):
+    """
+    Compare JOB DESCRIPTION vs RESUME skills
+    """
+
+    job_set = set([s.lower() for s in job_skills])
+    resume_set = set([s.lower() for s in resume_skills])
+
+    matched = list(job_set.intersection(resume_set))
+    missing = list(job_set - resume_set)
+
+    skill_ratio = (
+        (len(matched) / len(job_set)) * 100
+        if len(job_set) > 0 else 0
+    )
+
+    return matched, missing, skill_ratio

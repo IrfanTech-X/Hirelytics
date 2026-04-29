@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, send_file
 
 from utils.text_processor import clean_text
 from models.embedding_model import get_embedding
-from models.skill_extractor import extract_skills
+from models.skill_extractor import extract_skills, compare_skills
 
 import os
 import pandas as pd
@@ -93,7 +93,9 @@ def upload_files():
 
     job_emb = get_embedding(job_text)
 
-    job_skills = extract_skills(job_text)
+    #  FIXED: CLEAN SKILLS FROM JD
+    job_skills_raw = extract_skills(job_text)
+    job_skills = list(set([s.strip().lower() for s in job_skills_raw]))
 
     total_skills = len(job_skills)
 
@@ -125,17 +127,15 @@ def upload_files():
             resume_emb
         ) * 100
 
-        # -------------------- SKILL EXTRACTION --------------------
+        # -------------------- SKILL EXTRACTION (FIXED) --------------------
 
-        skills = extract_skills(resume_text)
+        resume_skills_raw = extract_skills(resume_text)
+        resume_skills = list(set([s.strip().lower() for s in resume_skills_raw]))
 
-        matched_skills = [
-            s for s in skills if s in job_skills
-        ]
-
-        missing_skills = [
-            s for s in job_skills if s not in skills
-        ]
+        matched_skills, missing_skills, skill_ratio = compare_skills(
+            job_skills,
+            resume_skills
+        )
 
         # -------------------- ATS SCORE --------------------
 
@@ -174,7 +174,7 @@ def upload_files():
 
             "similarity": round(similarity, 2),
 
-            "skills": skills,
+            "skills": resume_skills,
 
             "matched_skills": matched_skills,
 

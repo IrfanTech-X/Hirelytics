@@ -36,6 +36,12 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 ml_model = joblib.load(MODEL_PATH)
 
+# -------------------- LOAD ML MODEL 2--------------------
+
+SUITABILITY_MODEL_PATH = "models/suitability_model.pkl"
+
+suitability_model = joblib.load(SUITABILITY_MODEL_PATH)
+
 # -------------------- UTIL FUNCTIONS --------------------
 
 def cosine_similarity(vec1, vec2):
@@ -93,7 +99,7 @@ def upload_files():
 
     job_emb = get_embedding(job_text)
 
-    #  FIXED: CLEAN SKILLS FROM JD
+    # FIXED: CLEAN SKILLS FROM JD
     job_skills_raw = extract_skills(job_text)
     job_skills = list(set([s.strip().lower() for s in job_skills_raw]))
 
@@ -149,6 +155,19 @@ def upload_files():
             "Yes" if ats_score >= 60 else "No"
         )
 
+        # -------------------- ML PREDICTION for ml 2 --------------------
+
+        ml_features = [[
+            similarity,
+            ats_score,
+            len(matched_skills),
+            len(missing_skills),
+            skill_ratio
+        ]]
+
+        raw = suitability_model.predict(ml_features)[0]
+        ai_suitability = str(raw).replace("_", " ").title()
+
         # -------------------- ML PREDICTION --------------------
 
         predicted_category = ml_model.predict([
@@ -186,7 +205,9 @@ def upload_files():
 
             "predicted_category": predicted_category,
 
-            "suitability": suitability
+            "suitability": suitability,
+
+            "ai_suitability": ai_suitability
         })
 
         # DELETE RESUME

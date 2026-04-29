@@ -161,7 +161,7 @@ AI-powered resume screening using semantic similarity, skill matching & ATS anal
 <th>Candidate</th>
 <th>ATS</th>
 <th>Similarity</th>
-<th>ML Prediction</th>
+<th>ML Predicted Role</th>
 <th>ATS Friendly</th>
 </tr>
 </thead>
@@ -180,6 +180,77 @@ AI-powered resume screening using semantic similarity, skill matching & ATS anal
 </td>
 </tr>
 {% endfor %}
+</tbody>
+</table>
+
+
+<!-- <h5>DEBUG AI VALUES</h5>
+<ul>
+{% for r in results %}
+<li>{{ r.name }} → {{ r.ai_suitability }}</li>
+{% endfor %}
+</ul> -->
+<h3 class="section-title">🤖 ML Predicted Shortlist (Job Recommendation highly Suitable Only)</h3>
+
+<table class="table table-bordered table-hover text-center">
+<thead>
+<tr>
+<th>Rank</th>
+<th>Candidate</th>
+<th>ML Prediction</th>
+<th>ATS Score</th>
+<th>Similarity</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for r in results %}
+    {% if r.ai_suitability is defined and r.ai_suitability %}
+        {% set val = r.ai_suitability|string|lower %}
+
+        {% if val in ['highly suitable', 'highly_suitable', '2', 'true'] %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ r.name }}</td>
+            <td><span class="badge bg-success">{{ r.ai_suitability }}</span></td>
+            <td>{{ r.ats_score }}%</td>
+            <td>{{ r.similarity }}%</td>
+        </tr>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+</tbody>
+</table>
+
+<h3 class="section-title">🤖 ML Predicted Shortlist (Job Recommendation Short listed)</h3>
+
+<table class="table table-bordered table-hover text-center">
+<thead>
+<tr>
+<th>Rank</th>
+<th>Candidate</th>
+<th>ML Prediction</th>
+<th>ATS Score</th>
+<th>Similarity</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for r in results %}
+<tr>
+<td>{{ loop.index }}</td>
+<td>{{ r.name }}</td>
+<td>
+<span class="badge bg-primary">{{ r.ai_suitability }}</span>
+</td>
+<td>{{ r.ats_score }}%</td>
+<td>{{ r.similarity }}%</td>
+</tr>
+{% endfor %}
+
 </tbody>
 </table>
 

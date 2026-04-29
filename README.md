@@ -1,6 +1,5 @@
-📄 README.md (Hirelytics v3.0)
 
-# Hirelytics v3.0 — AI-Powered Resume Screening & Candidate Ranking System
+# Hirelytics 
 
 Hirelytics is an AI-based recruitment system that automatically analyzes resumes against a job description using **NLP, Machine Learning, and Semantic Similarity models**. It ranks candidates based on ATS score, skill matching, and ML-based classification.
 

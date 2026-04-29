@@ -50,7 +50,7 @@ Hirelytics is an AI-based recruitment system that automatically analyzes resumes
 git clone https://github.com/your-username/hirelytics.git
 cd hirelytics
 
----
+```
 
 ### 3️⃣ Install Dependencies
 

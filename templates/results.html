@@ -9,57 +9,93 @@
 
 <style>
 body {
-    background:#f4f7f8;
-    font-family:'Segoe UI', sans-serif;
+    background: #f5f7fb;
+    font-family: 'Segoe UI', sans-serif;
+    color: #1f2937;
 }
+
+.container {
+    max-width: 1200px;
+}
+
+h1 {
+    font-weight: 700;
+}
+
 .section-title {
-    margin-top:50px;
-    margin-bottom:20px;
-    font-weight:700;
-    color:#0d6efd;
+    margin-top: 45px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #1d4ed8;
 }
+
+/* Cards */
 .card {
-    border-radius:14px;
-    box-shadow:0 6px 18px rgba(0,0,0,.12);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
+
+/* Tables */
+.table {
+    margin-bottom: 0;
+}
+
 .table thead {
-    background:#0d6efd;
-    color:#fff;
+    background: #1d4ed8;
+    color: white;
 }
-.badge-high { background:#198754; }
-.badge-mid { background:#ffc107; color:#000; }
-.badge-low { background:#dc3545; }
-.skill-badge { margin:2px; }
+
+.table tbody tr:hover {
+    background: #f3f6ff;
+}
+
+/* Badges */
+.badge-high { background: #16a34a; }
+.badge-mid { background: #f59e0b; color: #000; }
+.badge-low { background: #dc2626; }
+
+.skill-badge {
+    margin: 2px;
+    font-size: 12px;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+}
+
 </style>
 </head>
 
 <body>
+
 <div class="container my-5">
 
-<h1 class="text-center fw-bold mb-2">Hirelytics – AI Resume Analytics Dashboard</h1>
+<h1 class="text-center">Hirelytics – AI Resume Analytics Dashboard</h1>
 <p class="text-center text-muted mb-5">
-AI-powered resume screening using semantic similarity, skill matching & ATS analysis
+AI-powered resume screening using similarity, skill matching, and ML prediction
 </p>
 
 <!-- EXECUTIVE SUMMARY -->
-<div class="card p-4 mb-5">
-<h4 class="fw-bold">📌 Executive Summary</h4>
-<ul class="mt-3">
-<li>Ranking is based on ATS Score + Similarity + ML Prediction.</li>
-<li>ATS score = similarity + skill match.</li>
-<li>ML model predicts real-world hiring decision.</li>
+<div class="card p-4 mb-4">
+<h5 class="fw-bold">Executive Summary</h5>
+<ul class="mb-0">
+<li>Ranking based on ATS Score + Similarity + ML Prediction</li>
+<li>ATS score combines skill match and similarity</li>
+<li>ML model predicts candidate suitability</li>
 </ul>
 </div>
 
 <!-- ATS TABLE -->
-<h3 class="section-title">📄 ATS Score Table</h3>
-
-<table class="table table-bordered text-center">
+<h4 class="section-title">ATS Score Table</h4>
+<div class="card p-3">
+<table class="table text-center">
 <thead>
 <tr>
 <th>Candidate</th>
-<th>ATS Score (%)</th>
-<th>ATS Friendly</th>
+<th>ATS Score</th>
+<th>ATS Status</th>
 </tr>
 </thead>
 <tbody>
@@ -76,16 +112,17 @@ AI-powered resume screening using semantic similarity, skill matching & ATS anal
 {% endfor %}
 </tbody>
 </table>
+</div>
 
-<!-- SIMILARITY RANK -->
-<h3 class="section-title">🏆 Ranking by Job Similarity</h3>
-
-<table class="table table-bordered text-center">
+<!-- SIMILARITY -->
+<h4 class="section-title">Ranking by Similarity</h4>
+<div class="card p-3">
+<table class="table text-center">
 <thead>
 <tr>
 <th>Rank</th>
 <th>Candidate</th>
-<th>Similarity (%)</th>
+<th>Similarity</th>
 <th>Suitability</th>
 </tr>
 </thead>
@@ -107,11 +144,12 @@ AI-powered resume screening using semantic similarity, skill matching & ATS anal
 {% endfor %}
 </tbody>
 </table>
+</div>
 
-<!-- ================= SKILL TABLE (FIXED SAFETY) ================= -->
-<h3 class="section-title">🧠 Skill Match & Gap</h3>
-
-<table class="table table-bordered">
+<!-- SKILLS -->
+<h4 class="section-title">Skill Match & Gap</h4>
+<div class="card p-3">
+<table class="table">
 <thead>
 <tr>
 <th>Candidate</th>
@@ -124,25 +162,19 @@ AI-powered resume screening using semantic similarity, skill matching & ATS anal
 <tr>
 <td>{{ r.name }}</td>
 
-<!-- FIX 1: safe fallback -->
 <td>
-{% if r.matched_skills %}
-    {% for s in r.matched_skills %}
-        <span class="badge bg-success skill-badge">{{ s }}</span>
-    {% endfor %}
-{% else %}
-    <span class="text-muted">No Matches</span>
-{% endif %}
+{% for s in r.matched_skills %}
+<span class="badge bg-success skill-badge">{{ s }}</span>
+{% endfor %}
 </td>
 
-<!-- FIX 2: safe fallback -->
 <td>
 {% if r.missing_skills %}
-    {% for s in r.missing_skills %}
-        <span class="badge bg-danger skill-badge">{{ s }}</span>
-    {% endfor %}
+{% for s in r.missing_skills %}
+<span class="badge bg-danger skill-badge">{{ s }}</span>
+{% endfor %}
 {% else %}
-    <span class="badge bg-success">No Gap</span>
+<span class="text-muted">No Gap</span>
 {% endif %}
 </td>
 
@@ -150,19 +182,20 @@ AI-powered resume screening using semantic similarity, skill matching & ATS anal
 {% endfor %}
 </tbody>
 </table>
+</div>
 
-<!-- FINAL AI RANKING -->
-<h3 class="section-title">🥇 Final AI Ranking (ATS + Similarity + ML)</h3>
-
-<table class="table table-bordered table-hover text-center">
+<!-- FINAL RANKING -->
+<h4 class="section-title">Final AI Ranking</h4>
+<div class="card p-3">
+<table class="table text-center">
 <thead>
 <tr>
 <th>Rank</th>
 <th>Candidate</th>
 <th>ATS</th>
 <th>Similarity</th>
-<th>ML Predicted Role</th>
-<th>ATS Friendly</th>
+<th>ML Role</th>
+<th>Status</th>
 </tr>
 </thead>
 <tbody>
@@ -182,104 +215,58 @@ AI-powered resume screening using semantic similarity, skill matching & ATS anal
 {% endfor %}
 </tbody>
 </table>
+</div>
 
-
-<!-- <h5>DEBUG AI VALUES</h5>
-<ul>
-{% for r in results %}
-<li>{{ r.name }} → {{ r.ai_suitability }}</li>
-{% endfor %}
-</ul> -->
-<h3 class="section-title">🤖 ML Predicted Shortlist (Job Recommendation highly Suitable Only)</h3>
-
-<table class="table table-bordered table-hover text-center">
+<!-- ML SHORTLIST -->
+<h4 class="section-title">ML Predicted Shortlist</h4>
+<div class="card p-3">
+<table class="table text-center">
 <thead>
 <tr>
 <th>Rank</th>
 <th>Candidate</th>
 <th>ML Prediction</th>
-<th>ATS Score</th>
+<th>ATS</th>
 <th>Similarity</th>
 </tr>
 </thead>
-
 <tbody>
-
 {% for r in results %}
-    {% if r.ai_suitability is defined and r.ai_suitability %}
-        {% set val = r.ai_suitability|string|lower %}
-
-        {% if val in ['highly suitable', 'highly_suitable', '2', 'true'] %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ r.name }}</td>
-            <td><span class="badge bg-success">{{ r.ai_suitability }}</span></td>
-            <td>{{ r.ats_score }}%</td>
-            <td>{{ r.similarity }}%</td>
-        </tr>
-        {% endif %}
-    {% endif %}
-{% endfor %}
-
-</tbody>
-</table>
-
-<h3 class="section-title">🤖 ML Predicted Shortlist (Job Recommendation Short listed)</h3>
-
-<table class="table table-bordered table-hover text-center">
-<thead>
-<tr>
-<th>Rank</th>
-<th>Candidate</th>
-<th>ML Prediction</th>
-<th>ATS Score</th>
-<th>Similarity</th>
-</tr>
-</thead>
-
-<tbody>
-
-{% for r in results %}
+{% if r.ai_suitability %}
 <tr>
 <td>{{ loop.index }}</td>
 <td>{{ r.name }}</td>
-<td>
-<span class="badge bg-primary">{{ r.ai_suitability }}</span>
-</td>
+<td><span class="badge bg-success">{{ r.ai_suitability }}</span></td>
 <td>{{ r.ats_score }}%</td>
 <td>{{ r.similarity }}%</td>
 </tr>
+{% endif %}
 {% endfor %}
-
 </tbody>
 </table>
+</div>
 
 <!-- CHARTS -->
-<h3 class="section-title">📊 Visual Analytics</h3>
+<h4 class="section-title">Analytics</h4>
 
-<div class="row mb-5">
+<div class="row">
 <div class="col-md-6">
+<div class="card p-3">
 <canvas id="similarityChart"></canvas>
 </div>
+</div>
+
 <div class="col-md-6">
+<div class="card p-3">
 <canvas id="atsPieChart"></canvas>
 </div>
 </div>
-
-<!-- FINAL SUMMARY -->
-<h3 class="section-title">✅ AI Decision Insight</h3>
-
-<div class="card p-4 mb-5">
-<p>
-Top candidates are those with:
-<b>High ATS score + High similarity + Strong ML prediction.</b>
-</p>
 </div>
 
 <!-- BUTTONS -->
-<div class="text-center my-5">
-<a href="/download" class="btn btn-success btn-lg me-2">📥 Download CSV Report</a>
-<a href="/" class="btn btn-primary btn-lg">🔄 Analyze More Resumes</a>
+<div class="text-center mt-5">
+<a href="/download" class="btn btn-success px-4">Download Report</a>
+<a href="/" class="btn btn-primary px-4">Analyze Again</a>
 </div>
 
 </div>
@@ -293,12 +280,11 @@ type:'bar',
 data:{
 labels:names,
 datasets:[{
-label:'Similarity (%)',
+label:'Similarity %',
 data:similarity,
-backgroundColor:'rgba(13,110,253,0.7)'
+backgroundColor:'#1d4ed8'
 }]
-},
-options:{responsive:true,scales:{y:{beginAtZero:true,max:100}}}
+}
 });
 
 const atsYes = {{ results|selectattr('ats_friendly','equalto','Yes')|list|length }};
@@ -307,10 +293,10 @@ const atsNo = {{ results|selectattr('ats_friendly','equalto','No')|list|length }
 new Chart(document.getElementById('atsPieChart'), {
 type:'pie',
 data:{
-labels:['ATS Friendly','Not ATS Friendly'],
+labels:['ATS Friendly','Not ATS'],
 datasets:[{
 data:[atsYes, atsNo],
-backgroundColor:['#198754','#dc3545']
+backgroundColor:['#16a34a','#dc2626']
 }]
 }
 });
